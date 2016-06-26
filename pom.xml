@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>com.github.bwillard.rpi</groupId>
-  <artifactId>com.github.bwillard.rpi</artifactId>
+  <groupId>com.bwillard.rpi</groupId>
+  <artifactId>com.bwillard.rpi</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <name>Willard RPi Application</name>
   <build>
@@ -11,8 +11,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.3</version>
         <configuration>
-          <source>1.7</source>
-          <target>1.7</target>
+          <source>1.8</source>
+          <target>1.8</target>
         </configuration>
       </plugin>
       <plugin>
@@ -29,7 +29,7 @@
           <archive>
             <manifest>
               <addClasspath>true</addClasspath>
-              <mainClass>com.github.bwillard.rpi.RPiMain</mainClass>
+              <mainClass>com.bwillard.rpi.RPiMain</mainClass>
             </manifest>
           </archive>
           <descriptorRefs>
