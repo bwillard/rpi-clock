@@ -1,13 +1,12 @@
 package com.bwillard.rpi;
 
-import java.util.UUID;
-
-import org.joda.time.DateTime;
-import org.joda.time.Instant;
-
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.api.client.util.Strings;
+import org.joda.time.DateTime;
+import org.joda.time.Instant;
+
+import java.util.UUID;
 
 final class ClockEvent {
 	static final String DATASTORE_TYPE = "ClockEvent";
@@ -22,7 +21,6 @@ final class ClockEvent {
 	@JsonProperty("id")
 	private String id;
 
-	
 	@JsonCreator
 	ClockEvent(@JsonProperty("id") String id,
 			@JsonProperty("startTimeHours") int startTimeHours,

@@ -1,5 +1,6 @@
 package com.bwillard.rpi;
 
+import com.google.common.base.Preconditions;
 import com.twilio.sdk.TwilioRestClient;
 import com.twilio.sdk.TwilioRestException;
 import com.twilio.sdk.resource.factory.MessageFactory;
@@ -20,6 +21,10 @@ public class TwilioClient {
 	private final String toNumber;
 	
 	public TwilioClient(String sid, String authToken, String fromNumber, String toNumber) {
+		Preconditions.checkNotNull(sid, "Twilio sid is required");
+		Preconditions.checkNotNull(authToken, "Twilio authToken is required");
+		Preconditions.checkNotNull(fromNumber, "Twilio fromNumber is required");
+		Preconditions.checkNotNull(toNumber, "Twilio toNumber is required");
 		this.client = new TwilioRestClient(sid, authToken);
 		this.fromNumber = fromNumber;
 		this.toNumber = toNumber;

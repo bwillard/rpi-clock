@@ -8,6 +8,7 @@ import com.pi4j.io.gpio.RaspiPin;
 import org.joda.time.Duration;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
+import org.kohsuke.args4j.spi.ExplicitBooleanOptionHandler;
 
 import java.util.logging.ConsoleHandler;
 import java.util.logging.FileHandler;
@@ -53,10 +54,12 @@ public class RPiMain {
 	@Option(name="-twilioButtonPin", usage="The pin that the Twilio button is hooked up")
     private int twilioButtonPin = 4;
 	
-	@Option(name="-usePiFeatures", usage="If this is run on a pi and can access the pins, otherwise mock out pin interactions")
+	@Option(name="-usePiFeatures",
+			handler=ExplicitBooleanOptionHandler.class,
+			usage="If this is run on a pi and can access the pins, otherwise mock out pin interactions")
     private boolean usePiFeatures = true;
 	
-	@Option(name="-httpPort", usage="The port to run the http srver on")
+	@Option(name="-httpPort", usage="The port to run the http server on")
     private int httpPort = 8080;
 	
 	private GpioController gpio = null;
@@ -115,6 +118,7 @@ public class RPiMain {
 		clockDriver = new ClockDriver(clockDisplay, clockLogic, Duration.standardSeconds(clockFreqSec));
 		httpServer = new HttpServer(httpPort);
 		httpServer.registerHandler(new AlarmRequestHandler(clockLogic));
+		httpServer.registerHandler(new ManualClockDisplayHandler(clockLogic));
 		if (usePiFeatures) {
 			// httpServer.registerHandler(new TemperatureProbeRequestHandler(tempProbe));
 			httpServer.registerHandler(new PinTestRequestHandler(gpio));

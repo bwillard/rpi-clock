@@ -15,6 +15,8 @@ final class ClockLogic {
 	private final static Logger LOGGER = Logger.getLogger(ClockLogic.class.getName());
 	private final Map<String, ClockEvent> events = new HashMap<>();
 	private final DatastoreStorage storage;
+
+	private Boolean manual;
 	
 	ClockLogic(DatastoreStorage storage) throws IOException {
 		this.storage = storage;
@@ -52,15 +54,27 @@ final class ClockLogic {
 	public List<ClockEvent> getEvents() {
 		return ImmutableList.copyOf(events.values());
 	}
+
+	public void setManual(boolean manual) {
+		this.manual = manual;
+	}
 	
 	public boolean isTriggered(Instant instant) {
+		boolean computed = false;
 		for (ClockEvent event : events.values()) {
 			if (event.isTriggered(instant)) {
-				return true;
+				computed =  true;
 			}
 		}
-		
-		return false;
+
+		if (manual != null) {
+			if (computed == manual) {
+				manual = null;
+			} else {
+				return manual;
+			}
+		}
+		return computed;
 	}
 
 }
