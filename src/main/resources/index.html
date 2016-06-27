@@ -1,0 +1,111 @@
+<html>
+<head>
+    <title>Clock</title>
+    <script>
+
+        function init() {
+            getState();
+            getAlarms();
+        }
+
+        function getState() {
+            document.getElementById("state").textContent = "red";
+        }
+
+        function getAlarms() {
+            var req = new XMLHttpRequest();
+            req.open("GET", "/api/v1/alarms", true);
+
+            req.onreadystatechange = function() {
+              if (req.readyState == 4) {
+                if (req.status == 200) {
+                    var ul = document.getElementById("alarms");
+
+                    var alarms = JSON.parse(req.responseText);
+                    for (const alarm of alarms) {
+                      var li = document.createElement("li");
+                      var div = document.createElement('div');
+                      div.innerHTML = alarm.startTimeHours + ":" + alarm.startTimeMinutes
+                            + " ("+ alarm.durationSeconds + " seconds) <button onclick='deleteAlarm(\""
+                            + alarm.id + "\")'>delete</button>";
+                      li.appendChild(div);
+                      ul.appendChild(li);
+                    }
+                } else {
+                    handleError(req);
+                }
+              }
+            };
+            req.send();
+        }
+
+        function deleteAlarm(alarmId) {
+            var req = new XMLHttpRequest();
+            req.open("DELETE", "/api/v1/alarms/" + alarmId, true);
+                        req.onreadystatechange = function() {
+              if (req.readyState == 4) {
+                if (req.status != 200) {
+                    handleError(req);
+                }
+              }
+            };
+            req.send(value);
+        }
+
+        function setClockState(value) {
+            var req = new XMLHttpRequest();
+            req.open("POST", "/api/v1/clock", true);
+                        req.onreadystatechange = function() {
+              if (req.readyState == 4) {
+                if (req.status != 200) {
+                    handleError(req);
+                }
+              }
+            };
+            req.send(value);
+        }
+
+        function handleError(req) {
+            console.log(req.status + ": " + req.responseText);
+            alert('error');
+        }
+
+    </script>
+</head>
+<body onload="init()">
+    <noscript>
+        This page needs scripting to work, please enable.
+    </noscript>
+    <div>
+        <h1>
+            Current State
+        </h1>
+        <div>
+            Clock state: <span id="state"></span>
+        </div>
+        <div>
+            Alarm times:
+            <ul id="alarms">
+
+            </ul>
+        </div>
+    </div>
+    <hr/>
+    <div>
+        <h1>
+            Controls
+        </h1>
+        <form>
+            Add alarm:
+            Start Time hour:<input type="text" id="startTimeHour">
+            Start Time minutes:<input type="text" id="startTimeMinutes">
+            Duration (seconds): <input type="text" id="duration">
+            <button >Add</button>
+        </form>
+
+            Change Alarm State:
+            <button onclick="setClockState(true)">Turn Green</button>
+            <button onclick="setClockState(false)">Turn Red</button>
+    </div>
+</body>
+</html>

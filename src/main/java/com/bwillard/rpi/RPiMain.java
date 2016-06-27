@@ -124,6 +124,7 @@ public class RPiMain {
 			httpServer.registerHandler(new PinTestRequestHandler(gpio));
 			httpServer.registerHandler(new ClockTestRequestHandler(clockDisplay));
 		}
+		httpServer.registerHandler(new WebUiRequestHandler());
 		httpServer.start();
 		LOGGER.log(Level.INFO, "controllers started");
 
