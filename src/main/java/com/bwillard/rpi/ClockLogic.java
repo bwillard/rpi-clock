@@ -55,26 +55,23 @@ final class ClockLogic {
 		return ImmutableList.copyOf(events.values());
 	}
 
-	public void setManual(boolean manual) {
+	public void setManual(Boolean manual) {
 		this.manual = manual;
 	}
 	
 	public boolean isTriggered(Instant instant) {
-		boolean computed = false;
+		if (manual != null) {
+			return manual;
+		}
 		for (ClockEvent event : events.values()) {
 			if (event.isTriggered(instant)) {
-				computed =  true;
+				return true;
 			}
 		}
-
-		if (manual != null) {
-			if (computed == manual) {
-				manual = null;
-			} else {
-				return manual;
-			}
-		}
-		return computed;
+		return false;
 	}
 
+	public ClockState getState(Instant instant) {
+		return new ClockState(isTriggered(instant), manual != null);
+	}
 }

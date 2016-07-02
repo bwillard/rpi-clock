@@ -9,7 +9,24 @@
         }
 
         function getState() {
-            document.getElementById("state").textContent = "red";
+        var req = new XMLHttpRequest();
+            req.open("GET", "/api/v1/clock", true);
+
+            req.onreadystatechange = function() {
+              if (req.readyState == 4) {
+                if (req.status == 200) {
+                    var state = JSON.parse(req.responseText);
+                    document.getElementById("state").textContent = state.isTriggered ? "green" : "red";
+                    document.getElementById("setManually").textContent = state.isManuallySet;
+                    if (!state.isManuallySet) {
+                        document.getElementById("setAutomaticButton").disabled = true;
+                    }
+                } else {
+                    handleError(req);
+                }
+              }
+            };
+            req.send();
         }
 
         function getAlarms() {
@@ -55,9 +72,11 @@
         function setClockState(value) {
             var req = new XMLHttpRequest();
             req.open("POST", "/api/v1/clock", true);
-                        req.onreadystatechange = function() {
+            req.onreadystatechange = function() {
               if (req.readyState == 4) {
-                if (req.status != 200) {
+                if (req.status == 200) {
+                    location.reload();
+                } else {
                     handleError(req);
                 }
               }
@@ -81,7 +100,9 @@
             Current State
         </h1>
         <div>
-            Clock state: <span id="state"></span>
+            Clock color: <span id="state"></span>
+            <br/>
+            Set Manually: <span id="setManually"></span>
         </div>
         <div>
             Alarm times:
@@ -103,9 +124,10 @@
             <button >Add</button>
         </form>
 
-            Change Alarm State:
+            Set Clock Manually:
             <button onclick="setClockState(true)">Turn Green</button>
             <button onclick="setClockState(false)">Turn Red</button>
+            <button onclick="setClockState()" id="setAutomaticButton">Return To Automatic</button>
     </div>
 </body>
 </html>

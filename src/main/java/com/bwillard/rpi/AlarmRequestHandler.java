@@ -43,7 +43,8 @@ final class AlarmRequestHandler implements RequestHandler  {
 			case DELETE:
 				return handleDeleteRequest(session);
 			default:
-				return NanoHTTPD.newFixedLengthResponse(Status.BAD_REQUEST, NanoHTTPD.MIME_HTML, "<html><body>Unknown Method: " + session.getMethod() + "</body></html>");
+				return NanoHTTPD.newFixedLengthResponse(Status.BAD_REQUEST, NanoHTTPD.MIME_HTML,
+                        "<html><body>Unknown Method: " + session.getMethod() + "</body></html>");
 		}
 	}
 	
@@ -51,7 +52,8 @@ final class AlarmRequestHandler implements RequestHandler  {
 		try {
 			return NanoHTTPD.newFixedLengthResponse(mapper.writeValueAsString(clockLogic.getEvents()));
 		} catch (JsonProcessingException e) {
-			return NanoHTTPD.newFixedLengthResponse(Status.INTERNAL_ERROR, NanoHTTPD.MIME_HTML, "<html><body>Server Error: " + e.toString() + "</body></html>");
+			return NanoHTTPD.newFixedLengthResponse(Status.INTERNAL_ERROR, NanoHTTPD.MIME_HTML,
+					"<html><body>Server Error: " + e.toString() + "</body></html>");
 		}
 	}
 	

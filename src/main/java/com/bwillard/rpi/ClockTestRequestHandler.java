@@ -1,12 +1,12 @@
 package com.bwillard.rpi;
 
-import java.util.regex.Pattern;
-
 import fi.iki.elonen.NanoHTTPD;
 import fi.iki.elonen.NanoHTTPD.IHTTPSession;
 import fi.iki.elonen.NanoHTTPD.Method;
 import fi.iki.elonen.NanoHTTPD.Response;
 import fi.iki.elonen.NanoHTTPD.Response.Status;
+
+import java.util.regex.Pattern;
 
 final class ClockTestRequestHandler implements RequestHandler  {
 	private static final Pattern URL_PATTERN = Pattern.compile("/api/v1/clock");
@@ -28,7 +28,8 @@ final class ClockTestRequestHandler implements RequestHandler  {
 				clock.setState(!clock.getState());
 				return NanoHTTPD.newFixedLengthResponse(Status.BAD_REQUEST, NanoHTTPD.MIME_HTML, "Done");
 			default:
-				return NanoHTTPD.newFixedLengthResponse(Status.BAD_REQUEST, NanoHTTPD.MIME_HTML, "<html><body>Unknown Method: " + session.getMethod() + "</body></html>");
+				return NanoHTTPD.newFixedLengthResponse(Status.BAD_REQUEST, NanoHTTPD.MIME_HTML,
+                        "<html><body>Unknown Method: " + session.getMethod() + "</body></html>");
 		}
 	}
 }
