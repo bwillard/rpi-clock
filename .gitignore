@@ -8,6 +8,7 @@ target/
 
 .idea/workspace.xml
 .idea/tasks.xml
+deploy-readme.txt
 
 # Contain sensitive information
 key.json

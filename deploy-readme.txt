@@ -1,10 +1,5 @@
-(only once)
-in cygwin:
- scp /cygdrive/c/Users/bwillard/Documents/Projects/rpi/Pi-project-314-4ff96e2cde00.json willard@192.168.1.123:~/app/key.json
+scp /home/willard/Projects/rpi/out/rpi.jar willard@192.168.86.4:/usr/local/bin/inaryclock/app.jar
 
-(every time)
-in eclipse:
-  maven package
-in cygwin:
-  scp /cygdrive/c/Users/bwillard/Documents/Projects/rpi/target/com.github.bwillard.rpi-0.0.1-SNAPSHOT-jar-with-dependencies.jar willard@192.168.1.123:~/app/app.jar
+and then
 
+sudo initctl restart binary-clock
