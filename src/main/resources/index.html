@@ -2,7 +2,7 @@
 <head>
     <title>Clock</title>
     <script>
-
+        "use strict";
         function init() {
             getState();
             getAlarms();
@@ -39,7 +39,8 @@
                     var ul = document.getElementById("alarms");
 
                     var alarms = JSON.parse(req.responseText);
-                    for (const alarm of alarms) {
+                    for (var i = 0; i < alarms.length; i++) {
+                      var alarm = alarms[i];
                       var li = document.createElement("li");
                       var div = document.createElement('div');
                       div.innerHTML = alarm.startTimeHours + ":" + alarm.startTimeMinutes

@@ -18,6 +18,9 @@ import java.util.logging.Logger;
 
 public class RPiMain {
 	private final static Logger LOGGER = Logger.getLogger(RPiMain.class.getName());
+    @Option(name="-logFilePath", usage="The file to log to")
+    private String logFilePath = "/tmp/binaryClock.log";
+
 	@Option(name="-gcp-project", usage="Google Project Id")
     private String projectId = "pi-project-314";
 	
@@ -69,9 +72,6 @@ public class RPiMain {
 	private ActionDriver twilioActionDriverDriver = null;
 	
 	public static void main(String[] args) throws Exception {
-		Handler fileHandler = new FileHandler("log.txt");
-		fileHandler.setLevel(Level.ALL);
-		Logger.getGlobal().addHandler(fileHandler);
 		Handler consoleHandler = new ConsoleHandler();
 		consoleHandler.setLevel(Level.ALL);
 		Logger.getGlobal().addHandler(consoleHandler);
@@ -87,6 +87,9 @@ public class RPiMain {
         });
 		CmdLineParser parser = new CmdLineParser(this);
 		parser.parseArgument(args);
+        Handler fileHandler = new FileHandler(logFilePath);
+        fileHandler.setLevel(Level.ALL);
+        Logger.getGlobal().addHandler(fileHandler);
 		LOGGER.log(Level.INFO, "starting controllers");
 		ClockDisplay clockDisplay;
 		DatastoreStorage storage = new DatastoreStorage(keyFile, projectId);
