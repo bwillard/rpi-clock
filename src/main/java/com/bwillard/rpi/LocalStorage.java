@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -57,9 +58,16 @@ final class LocalStorage implements AlarmStorage {
 
     private void loadIfNeeded() throws IOException{
         if (null == events) {
-            LOGGER.finer("Loading persisted events from: " + configPath);
-            try (FileInputStream is = new FileInputStream(configPath)) {
-                events = mapper.readValue(is, new TypeReference<List<ClockEvent>>() {});
+            File file = new File(configPath);
+            if (!file.exists()) {
+                LOGGER.finer("Persisted events not found at: " + configPath);
+                events = new ArrayList<>();
+            } else {
+                LOGGER.finer("Loading persisted events from: " + configPath);
+                try (FileInputStream is = new FileInputStream(configPath)) {
+                    events = mapper.readValue(is, new TypeReference<List<ClockEvent>>() {
+                    });
+                }
             }
         }
     }
