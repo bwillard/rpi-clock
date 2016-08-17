@@ -1,6 +1,5 @@
 package com.bwillard.rpi;
 
-import com.google.api.services.datastore.client.DatastoreException;
 import com.google.common.collect.ImmutableList;
 import org.joda.time.Instant;
 
@@ -14,40 +13,30 @@ import java.util.logging.Logger;
 final class ClockLogic {
 	private final static Logger LOGGER = Logger.getLogger(ClockLogic.class.getName());
 	private final Map<String, ClockEvent> events = new HashMap<>();
-	private final DatastoreStorage storage;
+	private final AlarmStorage storage;
 
 	private Boolean manual;
 	
-	ClockLogic(DatastoreStorage storage) throws IOException {
+	ClockLogic(AlarmStorage storage) throws IOException {
 		this.storage = storage;
 		try {
 			for (ClockEvent event : storage.getClockEvents()) {
 				LOGGER.log(Level.INFO, "loaded event: " + event.getId());
 				events.put(event.getId(), event);
 			}
-		} catch (DatastoreException e) {
+		} catch (IOException e) {
 			LOGGER.log(Level.WARNING, e.toString());
 			throw new IOException(e);
 		}
 	}
 	
 	public void addEvent(ClockEvent event) throws IOException {
-		try {
-			storage.addClockEvent(event);
-		} catch (DatastoreException e) {
-			throw new IOException(e);
-		}
-		
+	    storage.addClockEvent(event);
 		events.put(event.getId(), event);
 	}
 	
 	public boolean deleteEvent(String id) throws IOException {
-		try {
-			storage.deleteClockEvent(id);
-		} catch (DatastoreException e) {
-			throw new IOException(e);
-		}
-		
+        storage.deleteClockEvent(id);
 		return events.remove(id) != null;
 	}
 	

@@ -21,6 +21,12 @@ public class RPiMain {
     @Option(name="-logFilePath", usage="The file to log to")
     private String logFilePath = "/tmp/binaryClock.log";
 
+    @Option(name="-use-local-storage", usage="If local storage should be used for alarms instead of GCP")
+    private boolean useLocalStorage = false;
+
+    @Option(name="-settings-path", usage="If use-local-storage is enabled where the settings are stored.")
+    private String localSettingsPath = "/etc/binaryClock/alarms.cfg";
+
 	@Option(name="-gcp-project", usage="Google Project Id")
     private String projectId = "pi-project-314";
 	
@@ -92,7 +98,12 @@ public class RPiMain {
         Logger.getGlobal().addHandler(fileHandler);
 		LOGGER.log(Level.INFO, "starting controllers");
 		ClockDisplay clockDisplay;
-		DatastoreStorage storage = new DatastoreStorage(keyFile, projectId);
+        AlarmStorage storage;
+        if (useLocalStorage) {
+            storage = new LocalStorage(localSettingsPath);
+        } else {
+            storage = new DatastoreStorage(keyFile, projectId);
+        }
 		
 		TwilioClient twilioClient = null;
 		

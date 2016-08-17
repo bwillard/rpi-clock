@@ -12,11 +12,15 @@ import fi.iki.elonen.NanoHTTPD.Response.Status;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 final class AlarmRequestHandler implements RequestHandler  {
 	private static final Pattern DELETE_URL_PATTERN = Pattern.compile("/api/v1/alarms/([^/]+)");
+    private final static Logger LOGGER = Logger.getLogger(ActionDriver.class.getName());
+
 	private final ClockLogic clockLogic;
 	private final ObjectMapper mapper;
 	
@@ -61,10 +65,12 @@ final class AlarmRequestHandler implements RequestHandler  {
 		// NB: don't close input stream or response can't be sent.
 		InputStream is = session.getInputStream();
 		try  {
+
 			ClockEvent event = mapper.readValue(is, ClockEvent.class);
 			clockLogic.addEvent(event);
-			return NanoHTTPD.newFixedLengthResponse(mapper.writeValueAsString(event));
+            return NanoHTTPD.newFixedLengthResponse(event.getId());
 		} catch (IOException e) {
+		    LOGGER.log(Level.WARNING, "Couldn't add alarm", e);
 			return NanoHTTPD.newFixedLengthResponse(Status.INTERNAL_ERROR, NanoHTTPD.MIME_HTML, "<html><body>Server Error: " + e.toString() + "</body></html>");
 		}
 	}
